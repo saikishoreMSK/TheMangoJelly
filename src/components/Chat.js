@@ -1,8 +1,9 @@
 // src/components/Chat.js
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconButton, Menu, MenuItem, Avatar, ListItem, ListItemText, Box, Paper, List, TextField, Button } from '@mui/material';
+import { IconButton, Avatar, ListItem, ListItemText, Box, Paper, List, TextField, Button, CircularProgress, Menu, MenuItem } from '@mui/material';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { sendMessage, receiveMessage, addReaction } from '../features/chatSlice'; // Ensure all actions are imported
 
 const Chat = () => {
@@ -13,18 +14,22 @@ const Chat = () => {
   const [error, setError] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentMessageId, setCurrentMessageId] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state for the sending message
+
+  const toggleDarkMode = () => {
+    setDarkMode((prevMode) => !prevMode);
+  };
 
   const handleTyping = () => {
     setIsTyping(true);
-    // Reset typing indicator after a delay (e.g., 2 seconds)
     setTimeout(() => setIsTyping(false), 2000);
   };
 
-  // Call the send message function on Enter key press
   const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
-      handleSendMessage(); 
+      handleSendMessage();
     }
   };
 
@@ -42,7 +47,6 @@ const Chat = () => {
     handleClose();
   };
 
-  // Simulate receiving a message after 5 seconds
   useEffect(() => {
     const timeout = setTimeout(() => {
       dispatch(receiveMessage('Hello, How Can I Help You!'));
@@ -56,10 +60,12 @@ const Chat = () => {
       return;
     }
     setError(false);
+    setLoading(true); // Set loading to true when sending message
     dispatch(sendMessage(input));
     setInput('');
     setIsTyping(false);
-    // Simulate a response from "Mango Jelly" after a delay
+    
+    // Simulate sending delay
     setTimeout(() => {
       const responses = [
         "I'm good, thanks!",
@@ -69,10 +75,10 @@ const Chat = () => {
       ];
       const randomResponse = responses[Math.floor(Math.random() * responses.length)];
       dispatch(receiveMessage(randomResponse));
-    }, 1000);  // Simulated delay of 1 second
+      setLoading(false); // Reset loading after response is received
+    }, 1000);
   };
 
-  // Scroll to the bottom when messages are updated
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -81,16 +87,37 @@ const Chat = () => {
 
   return (
     <Box
-      sx={{
+    sx={{
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
         padding: 2,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: darkMode ? '#333' : '#f0f0f0',
+        
       }}
+      
     >
-      {/* Chat Messages List */}
-      <Paper sx={{ flex: 1, overflowY: 'auto', padding: 2, marginBottom: 2 }}>
+        
+      <Paper sx={{ flex: 1, overflowY: 'auto', padding: 2, marginBottom: 2, backgroundColor: darkMode ? '#424242' : 'white' ,
+      
+        // backgroundImage: darkMode ? 'none' : `url('/images/Mango.png')`, // Adjust the path accordingly
+        // backgroundSize: '50px 50px',
+        // backgroundRepeat: 'repeat',
+        // backgroundPosition: '0 2px',
+
+      }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2,}}>
+        <img src='/images/Mango2.png' alt='Mango' width={200}/>
+  <IconButton 
+      onClick={toggleDarkMode} 
+      sx={{ marginRight: 2 }} // Add margin if you want space from the right edge
+  >
+      <Brightness4Icon sx={{ fontSize: '2rem' }} />
+  </IconButton>
+</Box>
+        
+
+        
         <List>
           {messages.map((message, index) => (
             <ListItem key={index} sx={{ justifyContent: message.user === 'You' ? 'flex-end' : 'flex-start' }}>
@@ -109,8 +136,10 @@ const Chat = () => {
                   maxWidth: '80%',
                   margin: 1,
                   boxShadow: 1,
+                  color: darkMode ? 'black' : 'black',
                 }}
               />
+              {/* Reaction Button */}
               <IconButton onClick={(event) => handleClick(event, message.id)}>
                 <EmojiEmotionsIcon />
               </IconButton>
@@ -132,17 +161,20 @@ const Chat = () => {
               )}
             </ListItem>
           ))}
-          {/* Typing indicator */}
-  {isTyping && (
-    <ListItem sx={{ justifyContent: 'center', marginTop: 2 }}>
-      <ListItemText primary="User is typing..." secondary="" />
-    </ListItem>
-  )}
+          {isTyping && (
+            <ListItem sx={{ justifyContent: 'center', marginTop: 2 }}>
+              <ListItemText primary="User is typing..." secondary="" />
+            </ListItem>
+          )}
+          {loading && (
+            <ListItem sx={{ justifyContent: 'center', marginTop: 2 }}>
+              <CircularProgress />
+            </ListItem>
+          )}
           <div ref={messagesEndRef}></div>
         </List>
       </Paper>
 
-      {/* Message Input Field */}
       <Box sx={{ display: 'flex' }}>
       <TextField
   fullWidth
@@ -151,21 +183,47 @@ const Chat = () => {
   value={input}
   onChange={(e) => {
     setInput(e.target.value);
-    handleTyping(); // Call the typing handler here
+    handleTyping();
   }}
   onKeyPress={handleKeyPress}
   error={error}
   helperText={error ? "Message cannot be empty" : ""}
-  sx={{ marginRight: 1 }}
+  sx={{
+    marginRight: 1,
+    backgroundColor: darkMode ? '#424242' : '#fff', // Change based on dark mode
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: darkMode ? '#B0BEC5' : '#ccc', // Border color
+      },
+      '&:hover fieldset': {
+        borderColor: darkMode ? '#FF9800' : '#FF9800', // Border color on hover
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#FF9800', // Border color when focused
+      },
+    },
+    '& .MuiInputBase-input': {
+      color: darkMode ? '#fff' : '#000', // Text color
+    },
+  }}
 />
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ backgroundColor: '#FF9800', '&:hover': { backgroundColor: '#F57F20' } }} 
-          onClick={handleSendMessage}
-        >
-          Send
-        </Button>
+
+<Button
+  variant="contained"
+  color="primary"
+  onClick={handleSendMessage}
+  sx={{
+    backgroundColor: darkMode ? '#FF9800' : '#FF9800', // Use primary color
+    color: '#fff', // Text color
+    '&:hover': {
+      backgroundColor: darkMode ? '#FFA000' : '#FFA000', // Darker shade on hover
+    },
+    // Adjust the width for better appearance if needed
+    minWidth: '80px',
+  }}
+>
+  Send
+</Button>
       </Box>
     </Box>
   );

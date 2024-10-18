@@ -7,6 +7,8 @@ const initialState = {
   currentUser: 'You',  // Simulate the current user
 };
 
+const validReactions = ['👍', '❤️', '😂', '😮', '😢', '😡'];
+
 const chatSlice = createSlice({
   name: 'chat',
   initialState,
@@ -28,10 +30,11 @@ const chatSlice = createSlice({
       });
     },
     addReaction: (state, action) => {
-      const { messageId, reaction } = action.payload;
-      const message = state.messages.find(msg => msg.id === messageId);
-      if (message) {
-        if (!message.reactions) message.reactions = [];
+      const { messageId, reaction } = action.payload; // Destructure messageId and reaction from payload
+      const message = state.messages.find(msg => msg.id === messageId); // Find the message by ID
+
+      if (message && validReactions.includes(reaction)) { // Check if the reaction is valid
+        if (!message.reactions) message.reactions = []; // Initialize reactions if not present
         message.reactions.push(reaction); // Add the reaction to the message
       }
     },

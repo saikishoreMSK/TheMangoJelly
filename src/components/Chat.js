@@ -1,10 +1,9 @@
-// src/components/Chat.js
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { IconButton, Avatar, ListItem, ListItemText, Box, Paper, List, TextField, Button, CircularProgress, Menu, MenuItem } from '@mui/material';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
-import { sendMessage, receiveMessage, addReaction } from '../features/chatSlice'; // Ensure all actions are imported
+import { sendMessage, receiveMessage, addReaction } from '../features/chatSlice';
 
 const Chat = () => {
   const messagesEndRef = useRef(null);
@@ -16,7 +15,7 @@ const Chat = () => {
   const [currentMessageId, setCurrentMessageId] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const [loading, setLoading] = useState(false); // Loading state for the sending message
+  const [loading, setLoading] = useState(false);
 
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => !prevMode);
@@ -50,7 +49,7 @@ const Chat = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       dispatch(receiveMessage('Hello, How Can I Help You!'));
-    }, 5000);
+    }, 1000);
     return () => clearTimeout(timeout);
   }, [dispatch]);
 
@@ -60,12 +59,11 @@ const Chat = () => {
       return;
     }
     setError(false);
-    setLoading(true); // Set loading to true when sending message
+    setLoading(true);
     dispatch(sendMessage(input));
     setInput('');
     setIsTyping(false);
     
-    // Simulate sending delay
     setTimeout(() => {
       const responses = [
         "I'm good, thanks!",
@@ -75,7 +73,7 @@ const Chat = () => {
       ];
       const randomResponse = responses[Math.floor(Math.random() * responses.length)];
       dispatch(receiveMessage(randomResponse));
-      setLoading(false); // Reset loading after response is received
+      setLoading(false);
     }, 1000);
   };
 
@@ -87,37 +85,21 @@ const Chat = () => {
 
   return (
     <Box
-    sx={{
+      sx={{
         display: 'flex',
         flexDirection: 'column',
         height: '100vh',
         padding: 2,
         backgroundColor: darkMode ? '#333' : '#f0f0f0',
-        
       }}
-      
     >
-        
-      <Paper sx={{ flex: 1, overflowY: 'auto', padding: 2, marginBottom: 2, backgroundColor: darkMode ? '#424242' : 'white' ,
-      
-        // backgroundImage: darkMode ? 'none' : `url('/images/Mango.png')`, // Adjust the path accordingly
-        // backgroundSize: '50px 50px',
-        // backgroundRepeat: 'repeat',
-        // backgroundPosition: '0 2px',
-
-      }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2,}}>
-        <img src='/images/Mango2.png' alt='Mango' width={200}/>
-  <IconButton 
-      onClick={toggleDarkMode} 
-      sx={{ marginRight: 2 }} // Add margin if you want space from the right edge
-  >
-      <Brightness4Icon sx={{ fontSize: '2rem' }} />
-  </IconButton>
-</Box>
-        
-
-        
+      <Paper sx={{ flex: 1, overflowY: 'auto', padding: 2, marginBottom: 2, backgroundColor: darkMode ? '#424242' : 'white' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}>
+          <img src='/images/Mango2.png' alt='Mango' width={200} />
+          <IconButton onClick={toggleDarkMode} sx={{ marginRight: 2 }}>
+            <Brightness4Icon sx={{ fontSize: '2rem' }} />
+          </IconButton>
+        </Box>
         <List>
           {messages.map((message, index) => (
             <ListItem key={index} sx={{ justifyContent: message.user === 'You' ? 'flex-end' : 'flex-start' }}>
@@ -139,11 +121,9 @@ const Chat = () => {
                   color: darkMode ? 'black' : 'black',
                 }}
               />
-              {/* Reaction Button */}
               <IconButton onClick={(event) => handleClick(event, message.id)}>
                 <EmojiEmotionsIcon />
               </IconButton>
-
               <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                 {['👍', '❤️', '😂', '😮', '😢', '😡'].map((reaction) => (
                   <MenuItem key={reaction} onClick={() => handleReaction(reaction)}>
@@ -151,7 +131,6 @@ const Chat = () => {
                   </MenuItem>
                 ))}
               </Menu>
-
               {message.reactions && message.reactions.length > 0 && (
                 <div style={{ marginTop: '5px', display: 'flex' }}>
                   {message.reactions.map((reaction, index) => (
@@ -174,56 +153,53 @@ const Chat = () => {
           <div ref={messagesEndRef}></div>
         </List>
       </Paper>
-
       <Box sx={{ display: 'flex' }}>
-      <TextField
-  fullWidth
-  variant="outlined"
-  placeholder="Type a message..."
-  value={input}
-  onChange={(e) => {
-    setInput(e.target.value);
-    handleTyping();
-  }}
-  onKeyPress={handleKeyPress}
-  error={error}
-  helperText={error ? "Message cannot be empty" : ""}
-  sx={{
-    marginRight: 1,
-    backgroundColor: darkMode ? '#424242' : '#fff', // Change based on dark mode
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: darkMode ? '#B0BEC5' : '#ccc', // Border color
-      },
-      '&:hover fieldset': {
-        borderColor: darkMode ? '#FF9800' : '#FF9800', // Border color on hover
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: '#FF9800', // Border color when focused
-      },
-    },
-    '& .MuiInputBase-input': {
-      color: darkMode ? '#fff' : '#000', // Text color
-    },
-  }}
-/>
-
-<Button
-  variant="contained"
-  color="primary"
-  onClick={handleSendMessage}
-  sx={{
-    backgroundColor: darkMode ? '#FF9800' : '#FF9800', // Use primary color
-    color: '#fff', // Text color
-    '&:hover': {
-      backgroundColor: darkMode ? '#FFA000' : '#FFA000', // Darker shade on hover
-    },
-    // Adjust the width for better appearance if needed
-    minWidth: '80px',
-  }}
->
-  Send
-</Button>
+        <TextField
+          fullWidth
+          variant="outlined"
+          placeholder="Type a message..."
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            handleTyping();
+          }}
+          onKeyPress={handleKeyPress}
+          error={error}
+          helperText={error ? "Message cannot be empty" : ""}
+          sx={{
+            marginRight: 1,
+            backgroundColor: darkMode ? '#424242' : '#fff',
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: darkMode ? '#B0BEC5' : '#ccc',
+              },
+              '&:hover fieldset': {
+                borderColor: darkMode ? '#FF9800' : '#FF9800',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#FF9800',
+              },
+            },
+            '& .MuiInputBase-input': {
+              color: darkMode ? '#fff' : '#000',
+            },
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSendMessage}
+          sx={{
+            backgroundColor: darkMode ? '#FF9800' : '#FF9800',
+            color: '#fff',
+            '&:hover': {
+              backgroundColor: darkMode ? '#FFA000' : '#FFA000',
+            },
+            minWidth: '80px',
+          }}
+        >
+          Send
+        </Button>
       </Box>
     </Box>
   );

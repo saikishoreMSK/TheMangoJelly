@@ -9,8 +9,8 @@ const Loader = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh', // Full viewport height
-        backgroundColor: 'background.default', // Match theme background
+        height: '100vh', 
+        backgroundColor: 'background.default', 
       }}
     >
       <CircularProgress />

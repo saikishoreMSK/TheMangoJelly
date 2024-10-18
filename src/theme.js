@@ -9,23 +9,23 @@ const theme = createTheme({
         dark: '#F57C00',
       },
     secondary: {
-      main: '#388E3C', // Darker secondary color for better contrast
+      main: '#388E3C', 
     },
     background: {
-      default: '#FFFFFF', // Light mode background color
-      paper: '#F7F7F7', // Slightly darker paper background for better contrast
+      default: '#FFFFFF', 
+      paper: '#F7F7F7', 
     },
     text: {
-      primary: '#000000', // Dark text color for better readability
-      secondary: '#333333', // Darker secondary text color
+      primary: '#000000', 
+      secondary: '#333333', 
     },
     // Dark mode colors
     dark: {
-      default: '#121212', // Dark background for dark mode
-      paper: '#1E1E1E', // Darker paper background for dark mode
+      default: '#121212', 
+      paper: '#1E1E1E', 
       text: {
-        primary: '#FFFFFF', // Light text for dark mode
-        secondary: '#B0BEC5', // Light secondary text for dark mode
+        primary: '#FFFFFF', 
+        secondary: '#B0BEC5', 
       },
     },
   },

@@ -70,7 +70,22 @@ const Chat = () => {
         "How about you?",
         "Let's chat!",
         "That's interesting!",
+        "Can you tell me more?",
+        "What do you think about that?",
+        "I'm here to help!",
+        "Nice to hear from you!",
+        "That sounds great!",
+        "I totally agree!",
+        "What else can I do for you?",
+        "Tell me something fun!",
+        "I'd love to know more.",
+        "How was your day?",
+        "Do you have any plans for the weekend?",
+        "That's a great question!",
+        "Thanks for sharing that!",
+        "I'm curious about that too!",
       ];
+      
       const randomResponse = responses[Math.floor(Math.random() * responses.length)];
       dispatch(receiveMessage(randomResponse));
       setLoading(false);

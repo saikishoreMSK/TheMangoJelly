@@ -197,12 +197,10 @@ const Chat = () => {
           color="primary"
           onClick={handleSendMessage}
           sx={{
-            backgroundColor: darkMode ? '#FF9800' : '#FF9800',
-            color: '#fff',
+            backgroundColor: darkMode ? '#FF9800' : '#FF9800',color: '#fff',
             '&:hover': {
               backgroundColor: darkMode ? '#FFA000' : '#FFA000',
-            },
-            minWidth: '80px',
+            },minWidth: '80px',
           }}
         >
           Send
